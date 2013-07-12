@@ -1,0 +1,12 @@
+
+# Get your app key and secret from the Dropbox developer website
+APP_KEY = 'YOUR DROPBOX APP KEY HERE'
+APP_SECRET = 'YOUR DROPBOX APP SECRET HERE'
+
+# ACCESS_TYPE should be 'dropbox' or 'app_folder' as configured for your app
+ACCESS_TYPE = 'app_folder'
+
+FTP_SERVER = 'FTP SERVER'
+FTP_USER = 'FTP USER'
+FTP_PASS = 'FTP PASS'
+FTP_REMOTE_PATH = 'FTP REMOTE PATH'

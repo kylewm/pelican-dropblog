@@ -1,25 +1,13 @@
-#!/usr/bin/env python
-
 import dropbox.client, dropbox.session, dropbox.rest
 import pelican
 import os
 import pickle
 from subprocess import check_call
 
-# Get your app key and secret from the Dropbox developer website
-APP_KEY = 'd7pt2k8d25k56po'
-APP_SECRET = 'f2iztffv1yqgl2z'
-
-# ACCESS_TYPE should be 'dropbox' or 'app_folder' as configured for your app
-ACCESS_TYPE = 'app_folder'
-
-FTP_SERVER = 'ftp.kylewm.com'
-FTP_USER = 'kylewm@andbutso.net'
-FTP_PASS = 'vGN3FfEo'
-FTP_REMOTE_PATH = '.'
+import dropblogconf as conf
 
 def init_dropbox_client():
-    sess = dropbox.session.DropboxSession(APP_KEY, APP_SECRET, ACCESS_TYPE)
+    sess = dropbox.session.DropboxSession(conf.APP_KEY, conf.APP_SECRET, conf.ACCESS_TYPE)
     try:
         with open(".access_token", "r") as f:
             access_token = pickle.load(f)
@@ -91,8 +79,8 @@ def run_pelican():
     pel.run()
 
 def ftp_mirror():
-    check_call(['lftp', FTP_SERVER, '-u', '{},{}'.format(FTP_USER,FTP_PASS),
-                '-e', 'set ssl-allow no ; mirror -R output {} ; quit'.format(FTP_REMOTE_PATH)]) 
+    check_call(['lftp', conf.FTP_SERVER, '-u', '{},{}'.format(conf.FTP_USER,conf.FTP_PASS),
+                '-e', 'set ssl-allow no ; mirror -R output {} ; quit'.format(conf.FTP_REMOTE_PATH)]) 
     
 if __name__ == '__main__':
     print "Initializing Dropbox client"

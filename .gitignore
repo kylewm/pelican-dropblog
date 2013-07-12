@@ -1,0 +1,6 @@
+dropblogconf.py
+*~
+*.pyc
+content
+output
+venv
