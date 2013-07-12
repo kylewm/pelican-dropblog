@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{% block title %}{{ SITENAME }}{% endblock title %}</title>
+    <meta charset="utf-8">
+      <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+      <link rel="stylesheet" type="text/css" href="/theme/pygments.css" />
+  </head>
+  <body>
+    <div class="box">
+      <div class="header">
+        <h1><span>{{ SITENAME }}</span></h1>
+      </div> <!-- /header -->
+      <p class="nav">
+        <a href="/">home</a> ~
+        <a href="/feeds/all.atom.xml">feed</a>
+      </p>
+
+      {% block content %}
+      {% endblock content %}
+
+      <p class="footer">
+        Find me on <a href="http://www.twitter.com/kyle_wm">Twitter</a>, <a href="https://github.com/kylewm">GitHub</a>, or <a href="mailto:kyle.mahan@gmail.com">Email</a>.<br />
+        <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US"></a> This work is licensed under <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/deed.en_US">CC BY-NC 3.0</a>.<br />
+        Powered by <a href="http://getpelican.com/">Pelican</a>.
+      </p>
+    </div> <!-- /box -->
+  </body>
+</html>
+
