@@ -1,9 +1,7 @@
-/*
-Copyright © 2013 Kyle Mahan <kyle.mahan@gmail.com>
-This work is free. You can redistribute it and/or modify it under the
-terms of the Do What The Fuck You Want To Public License, Version 2,
-as published by Sam Hocevar. See the COPYING file for more details.
-*/
+#Copyright © 2013 Kyle Mahan <kyle.mahan@gmail.com>
+#This work is free. You can redistribute it and/or modify it under the
+#terms of the Do What The Fuck You Want To Public License, Version 2,
+#as published by Sam Hocevar. See the COPYING file for more details.
 
 import dropbox.client, dropbox.session, dropbox.rest
 import pelican
