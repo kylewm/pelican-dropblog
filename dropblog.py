@@ -19,7 +19,7 @@ def init_dropbox_client():
             sess.token = access_token
     except:
         request_token = sess.obtain_request_token()
-        url = sess.build_authorize_url(request_token, oauth_callback="http://localhost")
+        url = sess.build_authorize_url(request_token, oauth_callback="http://dropbox.com")
         print "url:", url
         print "Please visit this website and press the 'Allow' button, then hit 'Enter' here."
         raw_input()
@@ -42,7 +42,7 @@ def dropbox_synchronize(client):
     delta = client.delta(cursor)
     #print "delta: ", delta
     for filename, delta_metadata in delta["entries"]:
-        dest_path = "./" + filename
+        dest_path = "staging/" + filename
         if not delta_metadata:
             # file has been deleted
             if os.path.exists(dest_path):
@@ -77,15 +77,16 @@ def run_pelican():
             self.delete_outputdir = None
 
     args = Args()
-    args.path='content'
-    args.settings='pelicanconf.py'
+    args.path='staging/content'
+    args.settings='staging/pelicanconf.py'
+    args.output='staging/output'
 
     pel = pelican.get_instance(args)
     pel.run()
 
 def ftp_mirror():
     check_call(['lftp', conf.FTP_SERVER, '-u', '{},{}'.format(conf.FTP_USER,conf.FTP_PASS),
-                '-e', 'set ssl-allow no ; mirror -R output {} ; quit'.format(conf.FTP_REMOTE_PATH)]) 
+                '-e', 'set ssl-allow no ; mirror -R staging/output {} ; quit'.format(conf.FTP_REMOTE_PATH)]) 
     
 if __name__ == '__main__':
     print "Initializing Dropbox client"
