@@ -1,4 +1,4 @@
-#Copyright © 2013 Kyle Mahan <kyle.mahan@gmail.com>
+#Copyright (c) 2013 Kyle Mahan <kyle.mahan@gmail.com>
 #This work is free. You can redistribute it and/or modify it under the
 #terms of the Do What The Fuck You Want To Public License, Version 2,
 #as published by Sam Hocevar. See the COPYING file for more details.
@@ -32,7 +32,7 @@ def init_dropbox_client():
     return client
 
 def dropbox_synchronize(client):
-    # Sync files from Dropbox to content/ folder
+    # Sync files from Dropbox to this folder
     cursor = None
     if os.path.exists(".cursor"):
         with open(".cursor", "r") as f:
@@ -42,7 +42,7 @@ def dropbox_synchronize(client):
     delta = client.delta(cursor)
     #print "delta: ", delta
     for filename, delta_metadata in delta["entries"]:
-        dest_path = "content/" + filename
+        dest_path = "./" + filename
         if not delta_metadata:
             # file has been deleted
             if os.path.exists(dest_path):
