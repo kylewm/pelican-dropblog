@@ -41,14 +41,19 @@ def dropbox_synchronize(client):
     changed = False
     delta = client.delta(cursor)
     #print "delta: ", delta
+    
+    files_to_remove = []
+    dirs_to_remove = []
+    
     for filename, delta_metadata in delta["entries"]:
         dest_path = "staging/" + filename
         if not delta_metadata:
             # file has been deleted
             if os.path.exists(dest_path):
-                print "removing: ", dest_path
-                os.remove(dest_path)
-                changed = True
+                if os.path.isfile(dest_path):
+                    files_to_remove.append(dest_path)
+                elif os.path.isdir(dest_path):
+                    dirs_to_remove.append(dest_path)
         elif not delta_metadata["is_dir"]:
             src_file, src_metadata = client.get_file_and_metadata(filename)
             print "copying: ", filename
@@ -59,6 +64,16 @@ def dropbox_synchronize(client):
             with open(dest_path, "w") as out:
                 out.write(src_file.read())
             changed = True
+
+    for filename in files_to_remove:
+        print "removing: ", filename
+        os.remove(filename)
+        changed = True
+    
+    for dirname in dirs_to_remove:
+        print "removing dir: ", dirname
+        os.rmdir(dirname)
+        changed = True
 
     new_cursor = delta["cursor"]
     with open(".cursor", "w") as f:

@@ -5,3 +5,5 @@ content
 output
 venv
 staging
+.access_token
+.cursor
