@@ -3,14 +3,17 @@
 #terms of the Do What The Fuck You Want To Public License, Version 2,
 #as published by Sam Hocevar. See the COPYING file for more details.
 
+SOURCE = 'git'
+#SOURCE = 'dropbox'
 
+GIT_REPO = 'PATH TO GIT REPOSITORY'
 
 # Get your app key and secret from the Dropbox developer website
-APP_KEY = 'YOUR DROPBOX APP KEY HERE'
-APP_SECRET = 'YOUR DROPBOX APP SECRET HERE'
+DROPBOX_APP_KEY = 'YOUR DROPBOX APP KEY HERE'
+DROPBOX_APP_SECRET = 'YOUR DROPBOX APP SECRET HERE'
 
 # ACCESS_TYPE should be 'dropbox' or 'app_folder' as configured for your app
-ACCESS_TYPE = 'app_folder'
+DROPBOX_ACCESS_TYPE = 'app_folder'
 
 FTP_SERVER = 'FTP SERVER'
 FTP_USER = 'FTP USER'

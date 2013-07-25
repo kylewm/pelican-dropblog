@@ -3,16 +3,15 @@
 #terms of the Do What The Fuck You Want To Public License, Version 2,
 #as published by Sam Hocevar. See the COPYING file for more details.
 
-import dropbox.client, dropbox.session, dropbox.rest
 import pelican
 import os
 import pickle
-from subprocess import check_call
+from subprocess import check_call, check_output
 
 import dropblogconf as conf
 
 def init_dropbox_client():
-    sess = dropbox.session.DropboxSession(conf.APP_KEY, conf.APP_SECRET, conf.ACCESS_TYPE)
+    sess = dropbox.session.DropboxSession(conf.DROPBOX_APP_KEY, conf.DROPBOX_APP_SECRET, conf.DROPBOX_ACCESS_TYPE)
     try:
         with open(".access_token", "r") as f:
             access_token = pickle.load(f)
@@ -81,6 +80,22 @@ def dropbox_synchronize(client):
 
     return changed
 
+
+def git_synchronize():
+    staging_dir = 'staging'
+    if not os.path.exists(staging_dir):
+        check_call(['git', 'clone', conf.GIT_REPO, staging_dir])
+        return True
+    else:
+        saved_dir = os.getcwd()
+        os.chdir(staging_dir)
+        start_rev = check_output(['git', 'rev-parse', 'HEAD'])
+        check_call(['git', 'pull', conf.GIT_REPO, 'master'])
+        new_rev = check_output(['git', 'rev-parse', 'HEAD'])
+        os.chdir(saved_dir)
+        return new_rev != start_rev
+
+
 def run_pelican():
     class Args:
         def __init__(self):
@@ -90,24 +105,33 @@ def run_pelican():
             self.markup = None
             self.theme = None
             self.delete_outputdir = None
-
     args = Args()
     args.path='staging/content'
     args.settings='staging/pelicanconf.py'
     args.output='staging/output'
-
     pel = pelican.get_instance(args)
     pel.run()
+
 
 def ftp_mirror():
     check_call(['lftp', conf.FTP_SERVER, '-u', '{},{}'.format(conf.FTP_USER,conf.FTP_PASS),
                 '-e', 'set ssl-allow no ; mirror -R staging/output {} ; quit'.format(conf.FTP_REMOTE_PATH)]) 
+
+
+def synchronize():
+    if conf.SOURCE is 'git':
+        print "Synchronizing with Git repository"
+        return git_synchronize()
+    elif conf.SOURCE is 'dropbox':
+        import dropbox.client, dropbox.session, dropbox.rest
+        print "Initializing Dropbox client"
+        client = init_dropbox_client()
+        print "Synchronizing with Dropbox"
+        return dropbox_synchronize(client)
+
     
 if __name__ == '__main__':
-    print "Initializing Dropbox client"
-    client = init_dropbox_client()
-    print "Synchronizing with Dropbox"
-    if dropbox_synchronize(client):
+    if synchronize():
         print "Generate static site"
         run_pelican()
         print "Create FTP mirror"
